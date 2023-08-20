@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task-3</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+    }
+
+    .form {
+        position: relative;
+        padding: 100px;
+        margin: 0 auto;
+    }
+
+    .input {
+        padding: 10px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #000;
+        outline: none
+    }
+
+    .btn {
+        display: inline-block;
+        border: 1px solid #000;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .text {
+        margin-top: 10px;
+        font-size: 20px;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-clear {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        display: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .input_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 5px;
+    }
+</style>
+
+<body>
+    <label class="form">
+        <div class="input_wrapper">
+            <input class="input" placeholder="Введи любое число" type="text">
+            <button type="submit" class="btn">Отправить!</button>
+        </div>
+        <div class="text">
+        </div>
+        <button type="submit" class="btn-clear">Очистить!</button>
+    </label>
+
+    <script>
+        let formInput = document.querySelector('.input')
+        let formBtn = document.querySelector('.btn')
+        let textInner = document.querySelector('.text')
+        let btnClear = document.querySelector('.btn-clear')
+
+
+        function formClear() {
+            formInput.value = ''
+            textInner.innerHTML = ''
+        }
+
+        function checkInput() {
+            let inputVal = formInput.value
+            btnClear.style.display = 'block'
+
+            if (inputVal.trim() === '') {
+                textInner.innerHTML = 'Введите число!';
+            }else if (isNaN(inputVal)) {
+                textInner.innerHTML = 'Введите число!'
+            } else if (inputVal < 0 || inputVal > 10) {
+                textInner.innerHTML = 'число вне диапазона от 1 до 10'
+            } else {
+                let limit = inputVal
+
+                const xhr = new XMLHttpRequest()
+                xhr.open('GET', `https://jsonplaceholder.typicode.com/photos?_limit=${limit}`, true)
+
+                xhr.onload = function () {
+                    if (xhr.status != 200) {
+                        console.log('Статус:', xhr.status)
+                    } else {
+                        const response = JSON.parse(xhr.responseText)
+                        console.log('JSON-Ответ:', response)
+
+                        let responseLink = ''
+                        response.forEach(item => {
+                            responseLink += `<img src="${item.thumbnailUrl}">`
+                        });
+                        textInner.innerHTML = responseLink
+                    }
+
+                }
+                xhr.send();
+            }
+
+
+        }
+
+        formBtn.addEventListener('click', checkInput)
+        btnClear.addEventListener('click', formClear)
+
+    </script>
+</body>
+
+</html>

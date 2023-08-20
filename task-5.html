@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task-5</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+    }
+
+    .form {
+        position: relative;
+        padding: 100px;
+        margin: 0 auto;
+    }
+
+    .input_first,
+    .input_second {
+        padding: 10px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #000;
+        outline: none
+    }
+
+    .btn {
+        display: inline-block;
+        border: 1px solid #000;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .text {
+        margin-top: 10px;
+        font-size: 20px;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-clear {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        display: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .input_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 5px;
+    }
+</style>
+
+<body>
+    <label class="form">
+        <div class="input_wrapper">
+            <input class="input_first" placeholder="Номен страницы" type="text">
+            <input class="input_second" placeholder="Лимит" type="text">
+            <button type="submit" class="btn">Запрос!</button>
+        </div>
+        <div class="text">
+        </div>
+        <button type="button" class="btn-clear">Очистить!</button>
+    </label>
+
+    <script>
+        let formInputFirst = document.querySelector('.input_first')
+        let formInputSecond = document.querySelector('.input_second')
+        let formBtn = document.querySelector('.btn')
+        let textInner = document.querySelector('.text')
+        let btnClear = document.querySelector('.btn-clear')
+
+
+        function formClear() {
+            formInputFirst.value = ''
+            formInputSecond.value = ''
+            textInner.innerHTML = ''
+            localStorage.removeItem('lastRequest')
+        }
+
+        function getResponse() {
+            let inputPage = formInputFirst.value
+            let inputLimit = formInputSecond.value
+            btnClear.style.display = 'block'
+
+            if (inputPage.trim() === '' || inputLimit.trim() === '') {
+                textInner.innerHTML = 'Введите число!';
+                return
+            }
+
+            if (isNaN(inputPage) && isNaN(inputLimit)) {
+                textInner.innerHTML = 'Введите число!';
+                return
+            }
+
+            if (inputPage < 1 || inputPage > 10) {
+                textInner.innerHTML = 'Номер страницы вне диапазона от 1 до 10'
+                return
+            }
+
+            if (inputLimit < 1 || inputLimit > 10) {
+                textInner.innerHTML = 'Лимит вне диапазона от 1 до 10'
+                return
+            }
+
+            const requestData = {
+                page: inputPage,
+                limit: inputLimit
+            }
+            console.log(requestData.page, requestData.limit);
+            localStorage.setItem('lastRequest', JSON.stringify(requestData))
+
+            let newUrl = `https://jsonplaceholder.typicode.com/photos?_page=${inputPage}&_limit=${inputLimit}/`
+
+            console.log(newUrl)
+            fetch(newUrl)
+                .then(response => response.json())
+                .then(data => {
+                    let imagesHTML = '';
+                    data.forEach(item => {
+                        const img = `<img src="${item.thumbnailUrl}" alt="${item.title}">`;
+                        imagesHTML += img;
+                    });
+                    textInner.innerHTML = imagesHTML;
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedData = JSON.parse(localStorage.getItem('lastRequest'));
+            console.log(savedData)
+            if (savedData && savedData.page && savedData.limit) {
+                formInputFirst.value = savedData.page
+                formInputSecond.value = savedData.limit
+                getResponse()
+            }
+        })
+
+
+
+        formBtn.addEventListener('click', getResponse)
+        btnClear.addEventListener('click', formClear)
+
+    </script>
+</body>
+
+</html>

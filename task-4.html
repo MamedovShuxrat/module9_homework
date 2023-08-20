@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task-4</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+    }
+
+    .form {
+        position: relative;
+        padding: 100px;
+        margin: 0 auto;
+    }
+
+    .input_first,
+    .input_second {
+        padding: 10px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #000;
+        outline: none
+    }
+
+    .btn {
+        display: inline-block;
+        border: 1px solid #000;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .text {
+        margin-top: 10px;
+        font-size: 20px;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn-clear {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: none;
+        display: none;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .input_wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 5px;
+    }
+</style>
+
+<body>
+    <label class="form">
+        <div class="input_wrapper">
+            <input class="input_first" placeholder="Введи любое число" type="text">
+            <input class="input_second" placeholder="Введи любое число" type="text">
+            <button type="submit" class="btn">Отправить!</button>
+        </div>
+        <div class="text">
+        </div>
+        <button type="submit" class="btn-clear">Очистить!</button>
+    </label>
+
+    <script>
+        let formInputFirst = document.querySelector('.input_first')
+        let formInputSecond = document.querySelector('.input_second')
+        let formBtn = document.querySelector('.btn')
+        let textInner = document.querySelector('.text')
+        let btnClear = document.querySelector('.btn-clear')
+
+
+        function formClear() {
+            formInputFirst.value = ''
+            formInputSecond.value = ''
+            textInner.innerHTML = ''
+        }
+
+        function checkInputs() {
+            let inputValFirst = formInputFirst.value
+            let inputValSecond = formInputSecond.value
+            btnClear.style.display = 'block'
+
+            if (inputValFirst.trim() === '' && inputValSecond.trim() === '') {
+                textInner.innerHTML = 'Введите число!';
+            } else if (isNaN(inputValFirst ) || isNaN(inputValSecond)) {
+                textInner.innerHTML = 'Введите число!'
+            } else if (inputValFirst < 100 || inputValFirst > 300 || inputValSecond < 100 || inputValSecond > 300) {
+                textInner.innerHTML = 'одно из чисел вне диапазона от 100 до 300'
+            } else {
+                let newUrl = `https://picsum.photos/seed/picsum/${inputValFirst}/${inputValSecond}`
+
+                console.log(newUrl)
+                fetch(newUrl)
+                    .then((response) => {
+                        return textInner.innerHTML = `<img src="${newUrl}">`
+                    })
+                    .catch(() => { console.log('error')});
+            }
+
+
+        }
+
+        formBtn.addEventListener('click', checkInputs)
+        btnClear.addEventListener('click', formClear)
+
+    </script>
+</body>
+
+</html>
