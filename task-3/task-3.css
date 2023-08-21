@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.form {
+    position: relative;
+    padding: 100px;
+    margin: 0 auto;
+}
+
+.input {
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000;
+    outline: none
+}
+
+.btn {
+    display: inline-block;
+    border: 1px solid #000;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.text {
+    margin-top: 10px;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-clear {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    display: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.input_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 5px;
+}
